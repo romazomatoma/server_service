@@ -1,0 +1,3 @@
+sudo apt-get install -y docker-compose
+
+echo "docker compose down;rm -rf server_service;git clone https://github.com/romazomatoma/server_service;cd server_service;docker-compose up -d --build"> run_on_vps.sh

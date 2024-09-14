@@ -1,3 +1,6 @@
+さくらVPSのDocker Compose(作成者: さくらインターネット)のスクリプト実行後に、run_on_vps.txtの中身を実行し、
+生成されたrun_on_vps.shを叩くことでdocker上でのWEBサービスが始まる。
+
 キャッシュ削除してビルド。
 docker compose build --no-cache
 
@@ -8,4 +11,9 @@ docker-compose build
 docker-compose up -d
 
 実行中のコンテナの中に入る。
-docker exec -it docker000-my_server_service-1 /bin/bash
+docker exec -it server_service-my_server_service-1 /bin/bash
+
+コンテナを閉じる。
+docker compose down
+
+実行中のコンソールなどはDocker Desktopから確認できる。

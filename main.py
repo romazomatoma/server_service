@@ -4,6 +4,12 @@ def GetNowTime():
     JST = datetime.timezone(t_delta, 'JST')
     return datetime.datetime.now(JST)
 
+def GetComputerInfo():
+    import socket
+    hostName = socket.gethostname()
+    ip_address = socket.gethostbyname(hostName)
+    return ip_address + ", " + hostName
+
 def SendMessageInterval(interval, FuncOfReturnStr):
     import LINENotifyBot
     bot = LINENotifyBot.LINENotifyBot(access_token=LINENotifyBot.g_line_token_a001)
@@ -16,7 +22,7 @@ def SendMessageInterval(interval, FuncOfReturnStr):
     job()
 
     import schedule
-    schedule.every().minute.at(interval).do(job)
+    schedule.every().minute.at(interval, "Asia/Tokyo").do(job)
 
     while True:
         schedule.run_pending()
@@ -25,7 +31,9 @@ def SendMessageInterval(interval, FuncOfReturnStr):
 
 def SampleOfIntervalCall():
     def func():
-        return GetNowTime().strftime('%m/%d %H:%M:%S')
+        pcInfo = GetComputerInfo()
+        timeStr = GetNowTime().strftime('%m/%d %H:%M:%S')
+        return pcInfo + " : " + timeStr
     SendMessageInterval(":00", func)
 
 def main():
