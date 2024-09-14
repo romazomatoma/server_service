@@ -1,2 +1,4 @@
 conda create -n home_desktop python=3.9 -y
-pip install schedule
+
+必要物は以下に記されている。
+docker_run.sh

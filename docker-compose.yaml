@@ -1,0 +1,8 @@
+version: '3'
+services:
+  my_server_service:
+    build: .
+    # 参考
+    # https://qiita.com/messhii222/items/01ae86ebedd576355fab
+    stdin_open: true
+    tty: true

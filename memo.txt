@@ -1,0 +1,11 @@
+キャッシュ削除してビルド。
+docker compose build --no-cache
+
+キャッシュを利用してビルド。
+docker-compose build
+
+ビルドしたものを実行。
+docker-compose up -d
+
+実行中のコンテナの中に入る。
+docker exec -it docker000-my_server_service-1 /bin/bash
