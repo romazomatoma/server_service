@@ -1,5 +1,7 @@
 さくらVPSのDocker Compose(作成者: さくらインターネット)のスクリプト実行後に、run_on_vps.txtの中身を実行し、
 生成されたrun_on_vps.shを叩くことでdocker上でのWEBサービスが始まる。
+run_on_vps.shは、dockerファイルの中身を取得するための操作。
+gitで最新を適用させる際にもrun_on_vps.shを実行すること。
 
 キャッシュ削除してビルド。
 docker compose build --no-cache
