@@ -34,7 +34,7 @@ def SampleOfYahooFApiTime():
 
 def SampleOfCheckHighLowColoseOpen():
     import bolero_yfinance_api
-    symData = bolero_yfinance_api.GetRecent1MinPriceData("USDJPY=X", "60m")
+    symData = bolero_yfinance_api.GetRecentPriceData("USDJPY=X", "60m")
     # print(symData)
     hlco = bolero_yfinance_api.CalcHighLowCloseOpen(symData)
     print(hlco)
@@ -65,6 +65,21 @@ def SampleOfTimeAndPrice():
         c = line["Close"]
         print(str(time) + " " + str(c))
 
+# 毎分チェックし、10pips以上動いたら知らせる。
+def MainOfNotifyMove10Pips():
+    def func():
+        import bolero_yfinance_api
+        symData = bolero_yfinance_api.GetRecentPriceData("USDJPY=X", "1m")
+        # print(symData)
+        hlco = bolero_yfinance_api.CalcHighLowCloseOpen(symData)
+        hlco = ConvertJpPips(hlco)
+        if (hlco[0] < 10):
+            return ""
+        return "usdjpy pips: higl-low:" + str(hlco[0]) + ", close-open:" + str(hlco[1])
+
+    import bolero_line_notify
+    bolero_line_notify.SendMessageInterval(":00", func)
+
 if __name__ == '__main__':
     # 実行パスを追加する。
     # https://rinoguchi.net/2019/11/python-module-import.html
@@ -78,5 +93,6 @@ if __name__ == '__main__':
     # SampleOfIntervalCall()
     # SampleOfYahooFApiTime()
     # SampleOfCheckHighLowColoseOpen()
-    SampleOfCheck1DayHLCO()
+    # SampleOfCheck1DayHLCO()
     # SampleOfTimeAndPrice()
+    MainOfNotifyMove10Pips()
