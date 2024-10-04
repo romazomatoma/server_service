@@ -65,6 +65,26 @@ def SampleOfTimeAndPrice():
         c = line["Close"]
         print(str(time) + " " + str(c))
 
+def SampleOfTimeAndPriceResample():
+    def Resample(_df, freq):
+        import pandas as pd
+        dfNew = pd.DataFrame()
+        dfNew["Open"] = _df["Open"].resample(freq).first()
+        dfNew["Close"] = _df["Close"].resample(freq).last()
+        dfNew["High"] = _df["High"].resample(freq).max()
+        dfNew["Low"] = _df["Low"].resample(freq).min()
+        return dfNew
+    import yfinance as yf
+    #  Open        High         Low       Close
+    df = yf.download(tickers="USDJPY=X", period="1d", interval="1h")
+
+    df = Resample(df, "6h")
+
+    for time, line in df.iterrows():
+        import bolero_yfinance_api
+        c = line["Close"]
+        print(str(time) + " " + str(c))
+
 # 毎分チェックし、10pips以上動いたら知らせる。
 def MainOfNotifyMove10Pips():
     def func():
@@ -95,4 +115,5 @@ if __name__ == '__main__':
     # SampleOfCheckHighLowColoseOpen()
     # SampleOfCheck1DayHLCO()
     # SampleOfTimeAndPrice()
-    MainOfNotifyMove10Pips()
+    SampleOfTimeAndPriceResample()
+    # MainOfNotifyMove10Pips()
