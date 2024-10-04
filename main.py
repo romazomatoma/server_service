@@ -39,11 +39,6 @@ def SampleOfCheckHighLowColoseOpen():
     hlco = bolero_yfinance_api.CalcHighLowCloseOpen(symData)
     print(hlco)
 
-def ConvertJpPips(hlco):
-    hlco[0] = int(hlco[0] * 100)
-    hlco[1] = int(hlco[1] * 100)
-    return hlco
-
 def SampleOfCheck1DayHLCO():
     import yfinance as yf
     #  Open        High         Low       Close   Adj Close  Volume
@@ -87,20 +82,25 @@ def SampleOfTimeAndPriceResample():
 
 # 毎分チェックし、10pips以上動いたら知らせる。
 def MainOfNotifyMove10Pips():
-    def func():
+    def func(symbol, interval
+             , priceMovementCheck = -1
+             ):
         import bolero_yfinance_api
-        symData = bolero_yfinance_api.GetRecentPriceData("USDJPY=X", "1m")
+        symData = bolero_yfinance_api.GetRecentPriceData(symbol, interval)
         if symData is None:
             return ""
-        # print(symData)
         hlco = bolero_yfinance_api.CalcHighLowCloseOpen(symData)
-        hlco = ConvertJpPips(hlco)
-        if (hlco[0] < 10):
+        if (hlco[0] < priceMovementCheck):
             return ""
-        return "usdjpy pips: higl-low:" + str(hlco[0]) + ", close-open:" + str(hlco[1])
+        return symbol + " : higl-low:" + str(hlco[0]) + ", close-open:" + str(hlco[1])
 
     import bolero_line_notify
-    bolero_line_notify.SendMessageInterval(":00", func)
+    bolero_line_notify.SendMessageInterval([
+        ["minute", ":00", lambda: func("USDJPY=X", "1m", 0.1)]
+        ,["minute", ":00", lambda: func("^N225", "1m"
+                                        , 100
+                                        )]
+    ])
 
 if __name__ == '__main__':
     # 実行パスを追加する。
