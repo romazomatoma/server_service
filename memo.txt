@@ -18,4 +18,10 @@ docker exec -it server_service-my_server_service-1 /bin/bash
 コンテナを閉じる。
 docker compose down
 
+コンテナの状態一覧を確認できる。
+docker ps -a
+
+コンテナIDのログを確認する。
+docker logs d89c6bda567b
+
 実行中のコンソールなどはDocker Desktopから確認できる。
