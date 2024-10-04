@@ -90,6 +90,8 @@ def MainOfNotifyMove10Pips():
     def func():
         import bolero_yfinance_api
         symData = bolero_yfinance_api.GetRecentPriceData("USDJPY=X", "1m")
+        if symData is None:
+            return ""
         # print(symData)
         hlco = bolero_yfinance_api.CalcHighLowCloseOpen(symData)
         hlco = ConvertJpPips(hlco)
@@ -115,5 +117,5 @@ if __name__ == '__main__':
     # SampleOfCheckHighLowColoseOpen()
     # SampleOfCheck1DayHLCO()
     # SampleOfTimeAndPrice()
-    SampleOfTimeAndPriceResample()
-    # MainOfNotifyMove10Pips()
+    # SampleOfTimeAndPriceResample()
+    MainOfNotifyMove10Pips()
