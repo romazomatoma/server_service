@@ -63,10 +63,13 @@ def SampleOfTimeAndPrice():
 # 直近N時間でリサンプルを行い足を求める。上限は5dayまで
 def GetRecentHourCandle(symbol, hour):
     def Resample(_df, freq):
-        dfNew = _df.resample(freq, origin='start').agg({'Open': 'first',
-                        'High': 'max',
-                        'Low': 'min',
-                        'Close': 'last'})
+        # todo: リサンプルする場合、最初の時間を採用してしまうので、最後の時間を採用したい。
+        dfNew = _df.resample(freq, origin='start').agg({
+            'Open': 'first',
+            'High': 'max',
+            'Low': 'min',
+            'Close': 'last'
+            })
         return dfNew
     import yfinance as yf
     df = yf.download(tickers=symbol, period="5d", interval="1h")
@@ -74,7 +77,7 @@ def GetRecentHourCandle(symbol, hour):
         return None
     df2 = df.tail(hour)
     df3 = Resample(df2, str(hour) + "h")
-    return df3.tail(1)
+    return df3.iloc[-1]
 
 def SampleOfGetRecentHourCandle():
     def Show(df):
@@ -104,12 +107,24 @@ def MainOfNotifyMove10Pips():
             return ""
         return symbol + " : higl-low:" + str(hlco[0]) + ", close-open:" + str(hlco[1])
 
+    # 定期配信用
+    def funcOfRegularSubscription(symbol):
+        c = GetRecentHourCandle(symbol, 12)
+        import bolero_yfinance_api
+        hlco = bolero_yfinance_api.CalcHighLowCloseOpen(c)
+        return "定期配信(12h)" + str(c.name) + "\n" + symbol + " : higl-low:" + str(hlco[0]) + ", close-open:" + str(hlco[1])
+
+    # デバッグ用
+    # print(funcOfRegularSubscription("USDJPY=X"))
+
     import bolero_line_notify
     bolero_line_notify.SendMessageInterval([
         ["minute", ":00", lambda: func("USDJPY=X", "1m", 0.1)]
-        ,["minute", ":00", lambda: func("^N225", "1m"
-                                        , 100
-                                        )]
+        ,["minute", ":00", lambda: func("^N225", "1m",100)]
+        ,["every_day", "08:45", lambda: funcOfRegularSubscription("^N225")]
+        ,["every_day", "20:25", lambda: funcOfRegularSubscription("^N225")]
+        ,["every_day", "08:45", lambda: funcOfRegularSubscription("USDJPY=X")]
+        ,["every_day", "20:25", lambda: funcOfRegularSubscription("USDJPY=X")]
     ])
 
 if __name__ == '__main__':
@@ -127,5 +142,5 @@ if __name__ == '__main__':
     # SampleOfCheckHighLowColoseOpen()
     # SampleOfCheck1DayHLCO()
     # SampleOfTimeAndPrice()
-    SampleOfGetRecentHourCandle()
-    # MainOfNotifyMove10Pips()
+    # SampleOfGetRecentHourCandle()
+    MainOfNotifyMove10Pips()

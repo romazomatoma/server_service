@@ -6,6 +6,7 @@ def GetRecentPriceData(symbol, interval_):
     if(len(df) < 2):
         return None
 
+    # TODO: GetRecentPriceDataの最新が0でなければ、最新を返すようにしたい。分足以外なら0でないこともある。
     line = df.iloc[-2] # 一番最新の-1はゼロになっているので、最新から2番目にする。
     # print(line)
     return line
