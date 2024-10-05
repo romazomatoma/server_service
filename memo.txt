@@ -14,6 +14,7 @@ docker-compose up -d
 
 実行中のコンテナの中に入る。
 docker exec -it server_service-my_server_service-1 /bin/bash
+docker exec -it d89c6bda567b /bin/bash
 
 コンテナを閉じる。
 docker compose down
