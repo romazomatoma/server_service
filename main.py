@@ -112,7 +112,9 @@ def MainOfNotifyMove10Pips():
         c = GetRecentHourCandle(symbol, 12)
         import bolero_yfinance_api
         hlco = bolero_yfinance_api.CalcHighLowCloseOpen(c)
-        return "定期配信(12h)" + str(c.name) + "\n" + symbol + " : higl-low:" + str(hlco[0]) + ", close-open:" + str(hlco[1])
+        def Format(num):
+            return '{:.2f}'.format(num)
+        return "定期配信(12h)\n" + str(c.name) + "\n" + symbol + "\n脚長:" + Format(hlco[0]) + "\n差額:" + Format(hlco[1])
 
     # デバッグ用
     # print(funcOfRegularSubscription("USDJPY=X"))
@@ -121,10 +123,10 @@ def MainOfNotifyMove10Pips():
     bolero_line_notify.SendMessageInterval([
         ["minute", ":00", lambda: func("USDJPY=X", "1m", 0.1)]
         ,["minute", ":00", lambda: func("^N225", "1m",100)]
-        ,["every_day", "08:45", lambda: funcOfRegularSubscription("^N225")]
-        ,["every_day", "20:25", lambda: funcOfRegularSubscription("^N225")]
-        ,["every_day", "08:45", lambda: funcOfRegularSubscription("USDJPY=X")]
-        ,["every_day", "20:25", lambda: funcOfRegularSubscription("USDJPY=X")]
+        ,["every_day", "09:00", lambda: funcOfRegularSubscription("^N225")]
+        ,["every_day", "21:00", lambda: funcOfRegularSubscription("^N225")]
+        ,["every_day", "09:00", lambda: funcOfRegularSubscription("USDJPY=X")]
+        ,["every_day", "21:00", lambda: funcOfRegularSubscription("USDJPY=X")]
     ])
 
 if __name__ == '__main__':

@@ -1,3 +1,18 @@
+面倒なのでdockerでやらない場合。
+
+minicondaインストール
+https://docs.anaconda.com/miniconda/
+の方法はパスが通らなかったのでやめて、GPTに聞いた。
+
+下記でcondaコマンドが使えると思う。トライ後、多少順番は書き換えた。
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+chmod +x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh
+export PATH="$HOME/miniconda3/bin:$PATH"
+conda init --all
+source ~/.bashrc
+
+---
 さくらVPSのDocker Compose(作成者: さくらインターネット)のスクリプト実行後に、run_on_vps.txtの中身を実行し、
 生成されたrun_on_vps.shを叩くことでdocker上でのWEBサービスが始まる。
 run_on_vps.shは、dockerファイルの中身を取得するための操作。
