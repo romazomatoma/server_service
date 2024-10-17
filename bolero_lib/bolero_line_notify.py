@@ -2,7 +2,7 @@ def SendMessageInterval(scheduleList): # [[scheduleType, scheduleInterval, func]
     import LINENotifyBot
     bot = LINENotifyBot.LINENotifyBot(access_token=LINENotifyBot.g_line_token_a001)
 
-    bot.send("START!")
+    # bot.send("START!")
 
     def job(func):
         m = func() # 送る文字列を返す関数。
@@ -27,3 +27,8 @@ def SendMessageInterval(scheduleList): # [[scheduleType, scheduleInterval, func]
         schedule.run_pending()
         import time
         time.sleep(1)
+
+def SimpleSendMessage(mes):
+    import LINENotifyBot
+    bot = LINENotifyBot.LINENotifyBot(access_token=LINENotifyBot.g_line_token_a001)
+    bot.send(mes)

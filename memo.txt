@@ -23,6 +23,6 @@ docker compose down
 docker ps -a
 
 コンテナIDのログを確認する。
-docker logs d89c6bda567b
+docker logs server_service_my_server_service_1
 
 実行中のコンソールなどはDocker Desktopから確認できる。

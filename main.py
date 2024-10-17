@@ -95,38 +95,48 @@ def SampleOfGetRecentHourCandle():
 
 # 毎分チェックし、10pips以上動いたら知らせる。
 def MainOfNotifyMove10Pips():
+    def Format(num):
+            return '{:.2f}'.format(num)
+
     def func(symbol, interval
              , priceMovementCheck = -1
              ):
         import bolero_yfinance_api
-        symData = bolero_yfinance_api.GetRecentPriceData(symbol, interval)
-        if symData is None:
+        c = bolero_yfinance_api.GetRecentPriceData(symbol, interval)
+        if c is None:
             return ""
-        hlco = bolero_yfinance_api.CalcHighLowCloseOpen(symData)
+        hlco = bolero_yfinance_api.CalcHighLowCloseOpen(c)
         if (hlco[0] < priceMovementCheck):
             return ""
-        return symbol + " : higl-low:" + str(hlco[0]) + ", close-open:" + str(hlco[1])
+        return "異常通知\n" + str(c.name) + "\n" + symbol + "\n脚長:" + Format(hlco[0]) + "\n差額:" + Format(hlco[1])
 
     # 定期配信用
     def funcOfRegularSubscription(symbol):
         c = GetRecentHourCandle(symbol, 12)
         import bolero_yfinance_api
         hlco = bolero_yfinance_api.CalcHighLowCloseOpen(c)
-        def Format(num):
-            return '{:.2f}'.format(num)
         return "定期配信(12h)\n" + str(c.name) + "\n" + symbol + "\n脚長:" + Format(hlco[0]) + "\n差額:" + Format(hlco[1])
 
-    # デバッグ用
-    # print(funcOfRegularSubscription("USDJPY=X"))
-
     import bolero_line_notify
+
+    # デバッグ用
+    mesA = funcOfRegularSubscription("EURJPY=X")
+    mesB = func("EURJPY=X", "1m", -1)
+
+    bolero_line_notify.SimpleSendMessage("init")
+    bolero_line_notify.SimpleSendMessage("[TEST]\n" + mesA)
+    bolero_line_notify.SimpleSendMessage("[TEST]\n" + mesB)
+
     bolero_line_notify.SendMessageInterval([
         ["minute", ":00", lambda: func("USDJPY=X", "1m", 0.1)]
+        ,["minute", ":00", lambda: func("EURJPY=X", "1m",0.1)]
         ,["minute", ":00", lambda: func("^N225", "1m",100)]
-        ,["every_day", "09:00", lambda: funcOfRegularSubscription("^N225")]
-        ,["every_day", "21:00", lambda: funcOfRegularSubscription("^N225")]
         ,["every_day", "09:00", lambda: funcOfRegularSubscription("USDJPY=X")]
+        ,["every_day", "09:00", lambda: funcOfRegularSubscription("EURJPY=X")]
+        ,["every_day", "09:00", lambda: funcOfRegularSubscription("^N225")]
         ,["every_day", "21:00", lambda: funcOfRegularSubscription("USDJPY=X")]
+        ,["every_day", "21:00", lambda: funcOfRegularSubscription("EURJPY=X")]
+        ,["every_day", "21:00", lambda: funcOfRegularSubscription("^N225")]
     ])
 
 if __name__ == '__main__':

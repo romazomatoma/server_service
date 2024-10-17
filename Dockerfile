@@ -7,6 +7,6 @@ RUN conda init
 RUN echo "conda activate a001" >> ~/.bashrc
 
 RUN apt-get install -y git
-RUN echo "git clone https://github.com/romazomatoma/server_service ; cd server_service ; bash docker_run.sh"> run.sh
+RUN echo "rm -rf server_service ; git clone https://github.com/romazomatoma/server_service ; cd server_service ; bash docker_run.sh"> run.sh
 
 CMD ["bash", "run.sh"]
