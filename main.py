@@ -113,6 +113,8 @@ def MainOfNotifyMove10Pips():
     # 定期配信用
     def funcOfRegularSubscription(symbol):
         c = GetRecentHourCandle(symbol, 12)
+        if c is None:
+            return symbol + " : 取得失敗..."
         import bolero_yfinance_api
         hlco = bolero_yfinance_api.CalcHighLowCloseOpen(c)
         return "定期配信(12h)\n" + str(c.name) + "\n" + symbol + "\n脚長:" + Format(hlco[0]) + "\n差額:" + Format(hlco[1])
