@@ -106,18 +106,18 @@ def MainOfNotifyMove10Pips():
         if c is None:
             return ""
         hlco = bolero_yfinance_api.CalcHighLowCloseOpen(c)
-        if (hlco[0] < priceMovementCheck):
+        if (hlco[1] < priceMovementCheck):
             return ""
-        return "異常通知\n" + str(c.name) + "\n" + symbol + "\n脚長:" + Format(hlco[0]) + "\n差額:" + Format(hlco[1])
+        return symbol + "\n差額:" + Format(hlco[1]) + "\n" + str(c.name)
 
     # 定期配信用
     def funcOfRegularSubscription(symbol):
-        c = GetRecentHourCandle(symbol, 12)
+        c = GetRecentHourCandle(symbol, 24)
         if c is None:
             return symbol + " : 取得失敗..."
         import bolero_yfinance_api
         hlco = bolero_yfinance_api.CalcHighLowCloseOpen(c)
-        return "定期配信(12h)\n" + str(c.name) + "\n" + symbol + "\n脚長:" + Format(hlco[0]) + "\n差額:" + Format(hlco[1])
+        return "定期配信(24h)\n" + symbol + "\n差額:" + Format(hlco[1]) + "\n" + str(c.name)
 
     import bolero_line_notify
 
@@ -130,15 +130,12 @@ def MainOfNotifyMove10Pips():
     bolero_line_notify.SimpleSendMessage("[TEST]\n" + mesB)
 
     bolero_line_notify.SendMessageInterval([
-        ["minute", ":00", lambda: func("USDJPY=X", "1m", 0.1)]
-        ,["minute", ":00", lambda: func("EURJPY=X", "1m",0.1)]
-        ,["minute", ":00", lambda: func("^N225", "1m",100)]
+        ["minute", ":00", lambda: func("USDJPY=X", "1m", 0.12)]
+        ,["minute", ":00", lambda: func("EURJPY=X", "1m",0.15)]
+        ,["minute", ":00", lambda: func("^N225", "1m", 200)]
         ,["every_day", "09:00", lambda: funcOfRegularSubscription("USDJPY=X")]
         ,["every_day", "09:00", lambda: funcOfRegularSubscription("EURJPY=X")]
         ,["every_day", "09:00", lambda: funcOfRegularSubscription("^N225")]
-        ,["every_day", "21:00", lambda: funcOfRegularSubscription("USDJPY=X")]
-        ,["every_day", "21:00", lambda: funcOfRegularSubscription("EURJPY=X")]
-        ,["every_day", "21:00", lambda: funcOfRegularSubscription("^N225")]
     ])
 
 if __name__ == '__main__':
