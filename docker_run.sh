@@ -1,6 +1,5 @@
-pip install requests
-pip install schedule
-pip install pytz
-pip install yfinance
-conda install -y pandas
+conda create -n a001 -f my_env.yml -y
+conda init
+echo "conda activate a001" >> ~/.bashrc
+
 python main.py
