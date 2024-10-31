@@ -26,3 +26,9 @@ docker ps -a
 docker logs server_service_my_server_service_1
 
 実行中のコンソールなどはDocker Desktopから確認できる。
+
+Docker イメージ、コンテナ、キャッシュの削除まとめ #Docker - Qiita
+https://qiita.com/kaiou_fight/items/d68436f374fcd3531cf6
+
+この辺りを試せば完全リセット。
+docker compose down;docker container prune -f;docker image prune -af;
